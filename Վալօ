@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Valentine 💘</title>
+
+<style>
+body {
+  margin: 0;
+  overflow: hidden;
+  background: #ffc0cb;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  font-family: Arial, sans-serif;
+}
+
+h1 {
+  font-size: 40px;
+  color: #ff2e63;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.character {
+  width: 220px;
+  margin-bottom: 30px;
+  z-index: 2;
+  transition: transform 0.6s ease;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+button {
+  width: 150px;
+  height: 60px;
+  font-size: 22px;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+#yesBtn {
+  background: #ff4d6d;
+  color: white;
+}
+
+#noBtn {
+  background: white;
+}
+
+/* Սրտիկներ */
+.heart {
+  position: fixed;
+  font-size: 20px;
+  animation: explode 4s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes explode {
+  0% {
+    transform: translate(0, 0) scale(0.2);
+    opacity: 1;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--x), var(--y)) scale(2.5);
+    opacity: 0;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<h1 id="question">Will you be my Valentine? 💖</h1>
+
+<img id="character" class="character" src="waiting.gif">
+
+<div class="buttons" id="buttons">
+  <button id="yesBtn">Yes 💕</button>
+  <button id="noBtn">No 🥺</button>
+</div>
+
+<script>
+const noBtn = document.getElementById("noBtn");
+const yesBtn = document.getElementById("yesBtn");
+const question = document.getElementById("question");
+const buttons = document.getElementById("buttons");
+const character = document.getElementById("character");
+
+/* No-ն փախչում է */
+function moveNo() {
+  noBtn.style.position = "fixed";
+
+  const x = Math.random() * (window.innerWidth - 150);
+  const y = Math.random() * (window.innerHeight - 80);
+
+  noBtn.style.left = x + "px";
+  noBtn.style.top = y + "px";
+
+  let scale = yesBtn.style.transform
+    ? parseFloat(yesBtn.style.transform.replace("scale(", "").replace(")", ""))
+    : 1;
+
+  scale += 0.1;
+  yesBtn.style.transform = `scale(${scale})`;
+}
+
+noBtn.addEventListener("mouseenter", moveNo);
+noBtn.addEventListener("mousemove", moveNo);
+
+/* Yes սեղմելուց հետո */
+yesBtn.addEventListener("click", () => {
+  question.innerHTML = "Yaaay!!! I love you!!! 💘";
+  buttons.style.display = "none";
+
+  character.src = "love.gif";
+  character.style.transform = "scale(1.9)"; /* երկրորդ գիֆը մեծանում է */
+
+  /* Սկզբնական մեծ պայթյուն */
+  for (let i = 0; i < 150; i++) {
+    createHeart();
+  }
+
+  /* Անընդհատ շատ սրտիկներ */
+  setInterval(() => {
+    for (let i = 0; i < 15; i++) {
+      createHeart();
+    }
+  }, 200);
+});
+
+/* Սրտիկներ՝ տարածվում են ամբողջ էկրանով */
+function createHeart() {
+  const heart = document.createElement("div");
+  heart.className = "heart";
+  heart.innerHTML = "💖";
+
+  const rect = character.getBoundingClientRect();
+  const centerX = rect.left + rect.width / 2;
+  const centerY = rect.top + rect.height / 2;
+
+  heart.style.left = centerX + "px";
+  heart.style.top = centerY + "px";
+
+  const x = (Math.random() - 0.5) * window.innerWidth * 2;
+  const y = (Math.random() - 0.5) * window.innerHeight * 2;
+
+  heart.style.setProperty("--x", x + "px");
+  heart.style.setProperty("--y", y + "px");
+
+  heart.style.fontSize = (Math.random() * 25 + 15) + "px";
+
+  document.body.appendChild(heart);
+
+  setTimeout(() => {
+    heart.remove();
+  }, 4500);
+}
+</script>
+
+</body>
+</html>
